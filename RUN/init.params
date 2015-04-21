@@ -1,0 +1,19 @@
+50						:nx1
+50						:nx2
+30000						:nt
+200						:outfreq
+1.0D0						:x1d
+3.141D0						:x2d
+0.8D0						:CFL
+2.0D0						:coordsno
+9.81D0						:grav
+0						:viscflag
+0						:ghost?
+7.7D0						:gun depth
+0						:from_dump?
+1						:boundflag:0wall,1NLAA
+0						:distflag: wiggles?
+
+
+
+

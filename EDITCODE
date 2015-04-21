@@ -1,0 +1,11 @@
+#!/bin/bash
+
+# Script to open in gedit all the files which I would like to see when
+# editing the code
+
+rm ./SOURCE/*~
+rm ./RUN/*~
+
+gedit ./SOURCE/*.f ./SOURCE/commonblock ./RUN/init.params ./PLOT/*.m &
+
+

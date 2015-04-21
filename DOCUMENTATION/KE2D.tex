@@ -1,0 +1,127 @@
+\documentclass{article}
+\begin{document}
+\title{KE2D}
+\author{J. R. C. King}
+\maketitle
+\begin{abstract}
+This document contains a hastily written outline of how to run KE2D
+\end{abstract}
+
+
+\section{File structure}
+KE2D.tar contains four folders: SOURCE, RUN, PLOT and DOCUMENTATION, and three files: EDITCODE, COMPILECODE, RUNCODE.
+
+\subsection{SOURCE}
+The folder SOURCE contains the following files
+\begin{itemize}
+\item \textbf{commonblock} - Declarations of all common variables.
+\item \textbf{EVOLVE.f} - Single phase Euler solving subroutine.
+\item \textbf{SWEEP1D.f} - A component of the single phase Euler solver.
+\item \textbf{RIEMANNHLLC.f} - Solves a single phase Riemann problem to provide HLLC fluxes.
+\item \textbf{WENOZ.f} - Weighted essentially non-oscillatory reconstruction.
+\item \textbf{KINGEULER2D.f} - The main program.
+\item \textbf{SETTSTEP.f} - Sets the time step based on the CFL condition.
+\item \textbf{GFMSPLIT.f} - Creates two single-fluid domains for the GFM.
+\item \textbf{FINDPAIR.f} - Finds neighbours for interface cells.
+\item \textbf{FINISH.f} - An unnecessary subroute to end the program.
+\item \textbf{DUMPRESULTS.f} - Outputs data when required.
+\item \textbf{LEVELSET.f} - Updates the level set.       
+\item \textbf{SETUP.f} - Sets up initial conditions.
+\item \textbf{NLAABC.f} - Applies the NLAA boundary condition.
+\item \textbf{NLAABCGHOST.f} - Applies the NLAA boundary condition with the ghost.
+\item \textbf{SETBCELL.f} - Determines which cells are interface cells.
+\item \textbf{VORTICITY.f} - Calculates the vorticity in a quite simplistic manner.
+\end{itemize}
+
+\subsection{RUN}
+The folder RUN contains the following
+\begin{itemize}
+\item \textbf{KE2D} - the executable.
+\item \textbf{init.params} - the main parameter file/
+\item \textbf{AG.dat} - initial conditions for an air gun bubble.
+\end{itemize}
+When KE2D is run, all output files (with the extension .out) will be created in the folder RUN.
+
+\subsection{PLOT}
+The folder PLOT contains a sample Octave scripts to load the data.
+\begin{itemize}
+\item \textbf{indata.m} - this will load all the data, provided 'nx1', 'nx2' and 'outf' are set to match the values in init.params.
+\end{itemize}
+
+\subsection{DOCUMENTATION}
+The folder documentation contains this document and the Latex source files.
+
+\section{Output format}
+
+All output files are written in ASCII in double precision, which is probably quite extravagant.
+\begin{itemize}
+\item \textbf{dt.out} - time, time step value
+\item \textbf{pbound.out} - time, pressure at domain boundary
+\item \textbf{pint.out} - time, interface pressure
+\item \textbf{interface.out} - time, interface position
+\item \textbf{rhobound.out} - time, density at domain boundary
+\item \textbf{ubound.out} - time, velocity at domain boundary
+\item \textbf{bmass.out} - time, bubble mass
+\item \textbf{bz.out} - time, z-coordinate of bubble centre of mass
+\item \textbf{A.out} - level set
+\item \textbf{E.out} - energy
+\item \textbf{P.out} - pressure
+\item \textbf{rho.out} - density
+\item \textbf{ux.out} - x-component of velocity
+\item \textbf{uz.out} - z-component of velocity
+\item \textbf{ux1.out} - r-component of velocity
+\item \textbf{ux2.out} - $\theta$-component of velocity
+\item \textbf{vort.out} - vorticity
+\item \textbf{x.out} - x coordinate
+\item \textbf{z.out} - z coordinate
+\item \textbf{x1.out} - r coordinate
+\item \textbf{x2.out} - $\theta$ coordinate
+\end{itemize}
+
+The files with 2 columns and time in the first column can just be plotted with gnuplot. pint.out and interface.out for example.
+
+The files for arrays of properties (eg. P.out) are written by looping over the $\theta$-index within a loop over the r-index. This is repeated every time the output is written. If the spatial index in the r-direction is $i$ and in the $\theta$-direction is $j$, and the time index is $k$, then the first row of P.out is for $\left(i,j,k\right)=\left(1,1,1\right)$, the second is $\left(i,j,k\right)=\left(1,2,1\right)$. After one full sweep through $j$, it starts at $\left(i,j,k\right)=\left(2,1,1\right)$, then $\left(i,j,k\right)=\left(2,2,1\right)$, etc. After the full sweep through $i$, it is $\left(i,j,k\right)=\left(1,1,2\right)$, then $\left(i,j,k\right)=\left(1,2,2\right)$, etc. The file /PLOT/indata.m loads all these outputs into 3D arrays in Octave.
+
+The final 4 files listed contain the coordinates - there are two choices; Cartesian or polar. It tends to be easier to plot things against Cartesian coordinates. These files are written by looping over the $\theta$-index within a loop over the r-index.
+
+The code will also create a series of files 'DUMP00001.DUMP', 'DUMP00XXX.DUMP' etc, every XXX-1 time-steps. The first line of these contains the time. The subsequent lines contain all the arrays required to restart the simulation (except the mesh...) - density, pressure, radial velocity, polar velocity, total energy, level-set. These are written by looping over the $\theta$-index within a loop over the r-index.
+\section{Parameters}
+
+Parameters: here's what you can change in init.params.
+\begin{itemize}
+\item \textbf{nx1} - number of cells in radial direction
+\item \textbf{nx2} - number of cells in $\theta$ direction
+\item \textbf{nt} - number of time steps
+\item \textbf{outfreq} - output fields every outfreq timesteps
+\item \textbf{x1d} - domain radius
+\item \textbf{x2d} - angle of domain
+\item \textbf{CFL} - courant condition
+\item \textbf{coordsno} - the coordinate system - $0=$Cartesian, $1=$cylindrical, $2=$spherical.
+\item \textbf{grav} - the value of gravitational acceleration
+\item \textbf{viscflag} - a flag for viscosity. $0=$inviscid, $1=$viscous
+\item \textbf{ghostflag} - a flag for the ghost $0=$no ghost, $1=$ghost
+\item \textbf{d} - the depth of the bubble in metres
+\item \textbf{dumpflag} - a flag to decide whether to start from scratch. 0=from scratch, 1=from dump
+\item \textbf{boundflag} - a flag to set the outer bc. $0=$wall, $1=$NLAA
+\item \textbf{distflag} - a flag to set forcing on initial shape. $0=$no forcing, $1=$sin, $2=$cos.
+\end{itemize}
+
+AG.dat file just contains a list of left and right properties plus the initial interface location.
+
+\section{How to run}
+In the folder KE2D there are three files:
+
+\begin{itemize}
+\item \textbf{./EDITCODE} will open all the source files, paramater files and Octave scripts in gedit.
+\item \textbf{./COMPILECODE} will delete output files and executable from RUN, compile the code with gfortran, and put the new executable 'KE2D' into the folder RUN
+\item \textbf{./RUNCODE} will run the code!
+\end{itemize}
+
+As you receive the code, it will run an air gun bubble simulation on a 1metre domain with 50x50 cells for 3e4 time steps - about 1 oscillation. These initial conditions produce the 2D trace in Figure 6.1 of Chapter 6 in my thesis.
+
+The simulation is very roughly (with some artistic license in applying a reduction factor to the initial pressure) equivalent to a 250cu.in. air gun at 2000psi in 7.7m of water.
+
+\end{document}
+
+
+

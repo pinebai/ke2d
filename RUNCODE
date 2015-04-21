@@ -1,0 +1,17 @@
+#!/bin/bash
+
+# Script to run the code 
+#
+
+cd ./RUN/
+
+rm *.out
+rm DUMP.tron
+for x in *.DUMP;do mv $x DUMP.tron;done 
+
+
+./KE2D
+
+cd ../
+
+

@@ -1,0 +1,52 @@
+C	---------------------------------------------------------------
+	PARAMETER (nx1max=802,nx2max=202,ntmax=100002,npmax=10)
+C
+C	GRID
+	INTEGER nx1,nx2,bcount,bcell(nx1max,nx2max),
+     +		bci(1000),bcj(1000),q(nx2max)
+	DOUBLE PRECISION	x1d,x2d,x1(nx1max),x2(nx2max),dx1,
+     +				dx2,coordsno,x(nx1max,nx2max),
+     +				z(nx1max,nx2max),r(nx1max,nx2max),
+     +				th(nx1max,nx2max)
+	DOUBLE PRECISION	V(nx1max,nx2max),Sx1mh(nx1max,nx2max),
+     +				Sx2mh(nx1max,nx2max)
+	COMMON	/ grid /
+     +		x1d,x2d,x1,x2,dx1,dx2,coordsno,x,z,r,th,V,Sx1mh,Sx2mh,
+     +		nx1,nx2,bcount,bcell,bci,bcj,q
+C	FLAGS_ETC
+	INTEGER outfreq,ofc1,viscflag,ghostflag,boundflag,distflag
+	COMMON	/ flags_etc /
+     +		outfreq,ofc1,viscflag,ghostflag,boundflag,distflag
+C	TIME
+	INTEGER tn,nt
+	DOUBLE PRECISION	dt,t,CFL,lc(nx1max,nx2max)
+	COMMON	/ time /
+     +		tn,nt,dt,t,CFL,lc
+C	INITIAL FIELD
+	DOUBLE PRECISION	ux11,ux12,ux21,ux22,rho1,rho2,p1,p2,
+     +			gm(2),pc(2),Rint
+	COMMON	/ initial_properties /
+     +		ux11,ux12,ux21,ux22,rho1,rho2,p1,p2,gm,pc,Rint
+C	BOUNDARY
+	DOUBLE PRECISION	Pinf(nx2max),Pinf0(nx2max),grav,
+     +			f(ntmax),df(ntmax),d2f(ntmax),
+     +			thist(ntmax),ubold,dgun
+	COMMON	/ boundary /
+     +		Pinf,Pinf0,grav,f,df,d2f,thist,ubold,dgun
+C	PROPERTIES
+	DOUBLE PRECISION	rho(nx1max,nx2max),ux1(nx1max,nx2max),
+     +		ux2(nx1max,nx2max),P(nx1max,nx2max),E(nx1max,nx2max),
+     +		vort(nx1max,nx2max),Uprop(2,npmax,nx1max,nx2max),
+     +		dUprop(npmax,nx1max,nx2max),dUmu(npmax,nx1max,nx2max),
+     +		IMPmu(npmax,nx1max,nx2max)
+	COMMON	/ flow_properties /
+     +		rho, ux1, ux2, P,E,vort,Uprop,dUprop,dUmu,IMPmu
+C	LEVEL SET
+	DOUBLE PRECISION	alpha(nx1max,nx2max),
+     +			normx1(nx1max,nx2max),normx2(nx1max,nx2max),
+     +			ulsx1(nx1max,nx2max),ulsx2(nx1max,nx2max)
+	COMMON	/ level_set /
+     +		alpha,normx1,normx2,ulsx1,ulsx2
+C
+	PARAMETER (pie=3.14159)
+C	---------------------------------------------------------------
