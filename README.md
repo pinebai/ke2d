@@ -4,7 +4,9 @@ This is the source code for a two-dimensional two-phase finite volume Euler solv
 
 If you are looking at this you have probably also been looking at my Ph.D. thesis.
 
-Brief further details of running the code are given in the DOCUMENTATION folder.
+Brief further details for running the code are given in the DOCUMENTATION folder.
+
+Please cite the paper if you use the code in your own work.
 
 TO DO:
 
